@@ -1,0 +1,15 @@
+SRC += features/achordion.c
+
+AUTOCORRECT_ENABLE = yes
+TRI_LAYER_ENABLE = yes
+KEY_OVERRIDE_ENABLE = yes
+RGB_MATRIX_CUSTOM_KB = no
+
+# Copy pasted from Oryx.
+
+CONSOLE_ENABLE = no
+COMMAND_ENABLE = no
+MOUSEKEY_ENABLE = no
+ORYX_ENABLE = yes
+SPACE_CADET_ENABLE = no
+CAPS_WORD_ENABLE = yes
