@@ -220,5 +220,5 @@ add('width')
 add('yield')
 
 await writeFile('./features/autocorrect_dictionary.txt', print())
-execSync('qmk generate-autocorrect-data ./features/autocorrect_dictionary.txt -o ./features/autocorrect_data.h')
+execSync('qmk generate-autocorrect-data ./features/autocorrect_dictionary.txt -kb zsa/voyager -km michaelostermann')
 await unlink('./features/autocorrect_dictionary.txt')
