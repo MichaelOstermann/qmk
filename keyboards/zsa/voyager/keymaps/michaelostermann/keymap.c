@@ -47,9 +47,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 const key_override_t **key_overrides = (const key_override_t *[]){
-    // Shift + Backspace = Delete
-	&ko_make_basic(MOD_MASK_SHIFT, KC_BSPC, KC_DEL),
-    &ko_make_basic(MOD_MASK_SHIFT, LT(2,KC_BSPC), KC_DEL),
     // Option + o = ö
     &ko_make_basic(MOD_MASK_ALT, KC_O, DE_OE),
     // Option + u = ü
@@ -67,16 +64,6 @@ bool get_retro_tapping(uint16_t keycode, keyrecord_t *record) {
         // feels bad when I'm using neovim since that's my <leader> key - trigger space upon release in this case.
         case LT(1, KC_SPACE):
             return true;
-        default:
-            return false;
-    }
-}
-
-bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        // This key enables my symbol layer, except when I'm going too fast, then things get deleted.
-        // Since backspace is always used in isolation and is a deliberate action, forcibly enable my
-        // my symbol layer when I'm combining backspace with any other key.
         case LT(2, KC_BSPC):
             return true;
         default:
@@ -98,20 +85,35 @@ bool achordion_eager_mod(uint8_t mod) {
     }
 }
 
-bool achordion_chord(uint16_t tap_hold_keycode,
-                     keyrecord_t* tap_hold_record,
-                     uint16_t other_keycode,
-                     keyrecord_t* other_record) {
+bool achordion_chord(
+    uint16_t tap_hold_keycode,
+    keyrecord_t* tap_hold_record,
+    uint16_t other_keycode,
+    keyrecord_t* other_record
+) {
     switch (tap_hold_keycode) {
         // Space is my <leader> key in neovim, with most secondary keys situated on my left side (eg. <leader>e, <leader>w, etc.).
         // With this setting I can be a bit sloppier here, since the layer switch only happens when I hold space and press
         // something on my right side (I don't have any bindings for my left side).
+        // Without this, I frequently press space for a little bit too long, layer 1 activates and then im probably hitting a KC_NO key which does nothing.
         case LT(1,KC_SPACE):
             return achordion_opposite_hands(tap_hold_record, other_record);
 
         default:
             return true;
     }
+}
+
+// Intent is to make accidental ctrl/cmd shortcuts less likely to happen, when going fast (cmd+q hurts a lot).
+uint16_t achordion_streak_chord_timeout(uint16_t tap_hold_keycode, uint16_t next_keycode) {
+    // Disable streak detection on space/backspace, otherwise when I'm going fast things get eg. deleted.
+    if (IS_QK_LAYER_TAP(tap_hold_keycode)) { return 0; }
+
+    // Shorter timeout for shifts, I'd have to go *really* fast to consider shift a mispress.
+    const uint8_t mod = mod_config(QK_MOD_TAP_GET_MODS(tap_hold_keycode));
+    if ((mod & MOD_LSFT) != 0) { return 100; }
+
+    return 220;
 }
 
 void matrix_scan_user(void) {
@@ -149,7 +151,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             break;
         case MAC_LOCK:
             HCS(0x19E);
-
         case RGB_SLD:
             if (record->event.pressed) {
                 rgblight_mode(1);
