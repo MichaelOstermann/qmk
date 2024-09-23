@@ -64,8 +64,6 @@ bool get_retro_tapping(uint16_t keycode, keyrecord_t *record) {
         // feels bad when I'm using neovim since that's my <leader> key - trigger space upon release in this case.
         case LT(1, KC_SPACE):
             return true;
-        case LT(2, KC_BSPC):
-            return true;
         default:
             return false;
     }
