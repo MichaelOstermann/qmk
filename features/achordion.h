@@ -1,4 +1,4 @@
-// Copyright 2022-2024 Google LLC
+// Copyright 2022-2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 
 /**
  * @file achordion.h
- * @brief Achordion: Customizing the tap-hold decision.
+ * @brief Achordion community module: Customizing the tap-hold decision.
  *
  * Overview
  * --------
  *
- * This library customizes when tap-hold keys are considered held vs. tapped
+ * This module customizes when tap-hold keys are considered held vs. tapped
  * based on the next pressed key, like Manna Harbour's Bilateral Combinations or
  * ZMK's positional hold. The library works on top of QMK's existing tap-hold
  * implementation. You define mod-tap and layer-tap keys as usual and use
@@ -56,32 +56,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * Handler function for Achordion.
- *
- * Call this function from `process_record_user()` as
- *
- *     #include "features/achordion.h"
- *
- *     bool process_record_user(uint16_t keycode, keyrecord_t* record) {
- *       if (!process_achordion(keycode, record)) { return false; }
- *       // Your macros...
- *       return true;
- *     }
- */
-bool process_achordion(uint16_t keycode, keyrecord_t* record);
-
-/**
- * Matrix task function for Achordion.
- *
- * Call this function from `matrix_scan_user()` as
- *
- *     void matrix_scan_user(void) {
- *       achordion_task();
- *     }
- */
-void achordion_task(void);
 
 /**
  * Optional callback to customize which key chords are considered "held".

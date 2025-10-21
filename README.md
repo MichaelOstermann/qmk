@@ -11,14 +11,6 @@ git clone https://github.com/MichaelOstermann/qmk.git
 qmk config user.overlay_dir="$(realpath qmk)"
 ```
 
-## Autocorrect Dictionary
-
-Edit as needed in `features/generate_autocorrect_dictionary.js`
-
-```sh
-node features/generate_autocorrect_dictionary.js
-```
-
 ## Compile/Flash
 
 ```sh
